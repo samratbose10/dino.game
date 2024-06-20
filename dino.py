@@ -1,8 +1,8 @@
 import tkinter as tk
 import random
 import time
+from PIL import Image, ImageTk
 
-# Function to determine the winner
 def determine_winner(player_choice, dino_choice):
     if player_choice == dino_choice:
         return "Tie"
@@ -13,33 +13,51 @@ def determine_winner(player_choice, dino_choice):
     else:
         return "Dino wins!"
 
-# Function to handle the player's choice
 def play(player_choice):
-    result_label.config(text="Dino is thinking...")
+    result_label.config(text="Dino is thinking...", fg="blue")
     root.update()
-    time.sleep(2)  # Simulate the dino thinking
+    time.sleep(2) 
 
     dino_choice = random.choice(["Rock", "Paper", "Scissors"])
     result = determine_winner(player_choice, dino_choice)
     
-    result_label.config(text=f"Player chose: {player_choice}\nDino chose: {dino_choice}\nResult: {result}")
+    result_label.config(text=f"Player chose: {player_choice}\nDino chose: {dino_choice}\nResult: {result}", fg="green")
+    
+    new_game_button.pack(pady=10)
 
-# Create the main window
+def new_game():
+    result_label.config(text="")
+    new_game_button.pack_forget()
+
+def create_button(text, command):
+    return tk.Button(buttons_frame, text=text, command=command, font=("Helvetica", 14), 
+                     bg="#add8e6", fg="black", activebackground="#87CEEB", relief="raised", bd=5)
+
 root = tk.Tk()
 root.title("Rock Paper Scissors Game")
 
-# Create and place widgets
-tk.Label(root, text="Choose Rock, Paper, or Scissors").pack()
+root.geometry("500x500")
+root.configure(bg="#ffe5b4")
 
-buttons_frame = tk.Frame(root)
-buttons_frame.pack()
+image_path = "C:/Users/Lenovo/Desktop/dino/dino.game/dino.png"  
+dino_img = Image.open(image_path)
+dino_img = dino_img.resize((100, 100), Image.LANCZOS)
+dino_photo = ImageTk.PhotoImage(dino_img)
+tk.Label(root, image=dino_photo, bg="#ffe5b4").pack(pady=20)
 
-tk.Button(buttons_frame, text="Rock", command=lambda: play("Rock")).pack(side=tk.LEFT)
-tk.Button(buttons_frame, text="Paper", command=lambda: play("Paper")).pack(side=tk.LEFT)
-tk.Button(buttons_frame, text="Scissors", command=lambda: play("Scissors")).pack(side=tk.LEFT)
+tk.Label(root, text="Choose Rock, Paper, or Scissors", font=("Helvetica", 16), bg="#ffe5b4").pack(pady=10)
 
-result_label = tk.Label(root, text="")
-result_label.pack()
+buttons_frame = tk.Frame(root, bg="#ffe5b4")
+buttons_frame.pack(pady=10)
 
-# Start the main loop
+create_button("Rock", lambda: play("Rock")).pack(side=tk.LEFT, padx=15)
+create_button("Paper", lambda: play("Paper")).pack(side=tk.LEFT, padx=15)
+create_button("Scissors", lambda: play("Scissors")).pack(side=tk.LEFT, padx=15)
+
+result_label = tk.Label(root, text="", font=("Helvetica", 14), bg="#ffe5b4")
+result_label.pack(pady=20)
+
+new_game_button = tk.Button(root, text="New Game", command=new_game, font=("Helvetica", 14), 
+                            bg="#4CAF50", fg="white", activebackground="#45a049", relief="raised", bd=5)
+
 root.mainloop()
